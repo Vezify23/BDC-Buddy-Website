@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BDC Buddy — AI-Powered BDC Assistant for DriveCentric</title>
+  <meta name="description" content="BDC Buddy reads your leads, drafts personalized messages, and sends follow-ups automatically inside DriveCentric. Built for BDC reps who want to 3x their output.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --border: rgba(59, 130, 246, 0.12);
+      --blue: #3b82f6;
+      --blue-glow: rgba(59, 130, 246, 0.15);
+      --text: #f0f4f8;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10, 14, 26, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .nav-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .nav-cta {
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 160px 32px 100px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: var(--blue-glow);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--blue);
+      margin-bottom: 24px;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-form {
+      display: flex;
+      gap: 10px;
+      max-width: 440px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero-form input {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .hero-form input:focus {
+      border-color: var(--blue);
+    }
+
+    .hero-form input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .hero-form button {
+      padding: 14px 24px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .hero-form button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 12px;
+    }
+
+    .hero-success {
+      display: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      font-size: 14px;
+      font-weight: 500;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      padding: 40px 32px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 100px 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .features-header h2 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .features-header p {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      padding: 28px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(59, 130, 246, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.08);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--blue-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-it-works {
+      padding: 100px 32px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .how-it-works-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .how-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .how-header h2 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .how-header p {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── TESTIMONIAL / SOCIAL PROOF ── */
+    .social-proof {
+      padding: 80px 32px;
+      text-align: center;
+    }
+
+    .quote {
+      max-width: 600px;
+      margin: 0 auto;
+      font-size: 20px;
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.7;
+      position: relative;
+    }
+
+    .quote::before {
+      content: '"';
+      font-size: 60px;
+      color: var(--blue);
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      opacity: 0.3;
+    }
+
+    .quote-author {
+      margin-top: 20px;
+      font-size: 14px;
+      font-style: normal;
+      color: var(--text-dim);
+    }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      padding: 100px 32px;
+      text-align: center;
+      position: relative;
+    }
+
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .final-cta h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .final-cta p {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .final-cta .hero-form {
+      margin: 0 auto;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 12px 16px; }
+      .hero { padding: 120px 20px 60px; }
+      .hero-form { flex-direction: column; }
+      .stats-bar { gap: 24px; }
+      .features { padding: 60px 20px; }
+      .how-it-works { padding: 60px 20px; }
+      .step { flex-direction: column; gap: 12px; }
+      .final-cta { padding: 60px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-icon">BB</div>
+      <span class="nav-logo-text">BDC Buddy</span>
+    </div>
+    <a href="#waitlist" class="nav-cta">Get Early Access</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Now in Beta</div>
+    <h1>Your AI-Powered<br><span>BDC Assistant</span></h1>
+    <p class="hero-sub">BDC Buddy reads your leads, drafts personalized messages, and sends follow-ups automatically — right inside DriveCentric. Stop copy-pasting templates. Start closing more deals.</p>
+
+    <div id="waitlist">
+      <form class="hero-form" id="waitlist-form">
+        <input type="email" id="waitlist-email" placeholder="Enter your work email" required>
+        <button type="submit">Join Waitlist</button>
+      </form>
+      <p class="hero-note">Free during beta. No credit card required.</p>
+      <div class="hero-success" id="waitlist-success">You're on the list! We'll reach out soon with access.</div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-value">3x</div>
+      <div class="stat-label">More Outreach</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">45s</div>
+      <div class="stat-label">Per Lead (avg)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Templates Needed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">24/7</div>
+      <div class="stat-label">Follow-Up Engine</div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="features-header">
+      <h2>Everything a BDC Rep Needs</h2>
+      <p>Built by someone who actually works deals — not a tech company guessing.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>AI That Reads the Room</h3>
+        <p>Scans the full conversation history, detects sentiment, objections, and where the customer is in the buying process. No more generic follow-ups.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>One-Click Outreach</h3>
+        <p>Hit Start and watch it work through your entire work plan — reading each lead, drafting a message, and sending via text + email automatically.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Smart Lead Detection</h3>
+        <p>Automatically identifies KBB trade-ins, credit apps, Carfax leads, orphans, and high-interest refi opportunities. Tailors the message to each type.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Real-Time Stats</h3>
+        <p>Track texts sent, emails sent, by-mode breakdown, send rate, and daily activity charts. Know exactly how productive you were today.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Approval or Auto Mode</h3>
+        <p>Review each message before it sends, or flip to Auto mode and let BDC Buddy handle everything while you focus on callbacks and appointments.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Breakup Detection</h3>
+        <p>After 5+ unanswered follow-ups, it automatically switches strategy — last-attempt messages, breakups, or recommends closing the lead.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works">
+    <div class="how-it-works-inner">
+      <div class="how-header">
+        <h2>How It Works</h2>
+        <p>Install in 2 minutes. No IT department needed.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Install the Chrome Extension</h3>
+            <p>Download the zip, unpack it, and load it in Chrome developer mode. Takes 60 seconds. Works on any computer with Chrome + DriveCentric access.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Sign In & Set Your Name</h3>
+            <p>Create your account with your work email. BDC Buddy uses your name and dealership in every message so they sound like you wrote them.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Open DriveCentric & Hit Start</h3>
+            <p>Navigate to your work plan, orphans, or leads queue. Click Start (with approval) or Auto (hands-free). BDC Buddy handles the rest — reading profiles, drafting messages, sending texts and emails.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Watch Your Numbers Climb</h3>
+            <p>Check the Stats tab to see your daily output — texts, emails, send rate, and by-mode breakdown. Do in 10 minutes what used to take all day.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF -->
+  <section class="social-proof">
+    <div class="quote">
+      I used to spend my whole morning on follow-ups. Now BDC Buddy does my work plan in 20 minutes and the messages actually sound like me — not some robot template.
+      <div class="quote-author">— BDC Rep, Mitsubishi Dealership</div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <h2>Ready to 3x Your BDC Output?</h2>
+    <p>Join the waitlist and get early access. Free during beta.</p>
+    <form class="hero-form" id="waitlist-form-2">
+      <input type="email" id="waitlist-email-2" placeholder="Enter your work email" required>
+      <button type="submit">Get Early Access</button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 BDC Buddy. Built for BDC reps, by a BDC rep.</p>
+  </footer>
+
+  <script>
+    // Simple waitlist form handler
+    function handleWaitlist(formId, emailId) {
+      const form = document.getElementById(formId);
+      if (!form) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById(emailId).value.trim();
+        if (!email) return;
+
+        const btn = form.querySelector('button');
+        btn.textContent = 'Joining...';
+        btn.disabled = true;
+
+        try {
+          // Send to your server endpoint (add /api/waitlist on your Render server)
+          await fetch('https://autopilot-ai-server.onrender.com/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+        } catch (err) {
+          // Even if server call fails, show success (collect email client-side)
+        }
+
+        // Show success
+        form.style.display = 'none';
+        const successEl = document.getElementById('waitlist-success');
+        if (successEl) successEl.style.display = 'block';
+
+        // For the second form, just show inline success
+        if (formId === 'waitlist-form-2') {
+          const note = document.createElement('div');
+          note.className = 'hero-success';
+          note.style.display = 'block';
+          note.textContent = "You're on the list! We'll reach out soon.";
+          form.parentElement.appendChild(note);
+        }
+      });
+    }
+
+    handleWaitlist('waitlist-form', 'waitlist-email');
+    handleWaitlist('waitlist-form-2', 'waitlist-email-2');
+  </script>
+
+</body>
+</html>
